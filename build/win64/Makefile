@@ -7,7 +7,8 @@ LEX=flex
 
 CPPFLAGS=\
 	-I../../include \
-	-DUSE_JIT
+	-DUSE_JIT \
+	-DNO_TRANSLATION
 
 CFLAGS=\
 	-O0 \

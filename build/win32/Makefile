@@ -7,7 +7,8 @@ LEX=flex
 
 CPPFLAGS=\
 	-I../../include \
-	-DUSE_JIT
+	-DUSE_JIT \
+	-DNO_TRANSLATION
 
 CFLAGS=\
 	-O0 \
@@ -15,7 +16,7 @@ CFLAGS=\
 	-ffast-math \
 	-ftree-vectorize \
 	-finput-charset=utf-8 \
-	-fexec-charset=cp932 \
+	-fexec-charset=utf-8 \
 	-std=gnu11 \
 	-Wall \
 	-Werror \
@@ -55,14 +56,10 @@ DLL_OBJS=\
 CMD_OBJS=\
 	command.o
 
-all: linguine.exe liblinguine.dll liblinguine.a
+all: linguine.exe liblinguine.a
 
 linguine.exe: $(CMD_OBJS) liblinguine.a
 	$(CC) -o linguine $(CFLAGS) $^
-	$(STRIP) $@
-
-liblinguine.dll: $(DLL_OBJS)
-	$(CC) -o $@ $(CFLAGS) -shared -fPIC $^
 	$(STRIP) $@
 
 liblinguine.a: $(LIB_OBJS)

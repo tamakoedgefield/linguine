@@ -23,6 +23,10 @@
 #include <unistd.h>
 #include <stdbool.h>
 
+#if defined(TARGET_WINDOWS)
+#include <windows.h>
+#endif
+
 const char version[] =
 	"Linguine CLI Version 0.0.1\n";
 
@@ -34,7 +38,7 @@ const char usage[] =
 	"    linguine --safe-mode <source files and/or bytecode files>\n"
 	"  Compile to a bytecode file:\n"
 	"    linguine --bytecode <source files>\n"
-	"  Compile to a application C source:\n"
+	"  Compile to an application C source:\n"
 	"    linguine --app <source files>\n"
 	"  Compile to a DLL C source:\n"
 	"    linguine --dll <source files>\n"
@@ -432,6 +436,7 @@ static void init_lang_code(void)
 	const char *locale;
 
 	locale = setlocale(LC_ALL, "");
+	setlocale(LC_ALL, locale);
 	if (locale == NULL)
 		lang_code = "en";
 	else if (locale[0] == '\0' || locale[1] == '\0')
@@ -459,6 +464,22 @@ static void init_lang_code(void)
 	else
 		lang_code = "en";
 }
+
+#if defined(TARGET_WINDOWS)
+const char *linguine_iconv(const char *msg)
+{
+	static wchar_t wbuf[2048];
+	static char cbuf[4096];
+
+	memset(wbuf, 0, sizeof(wbuf));
+	memset(cbuf, 0, sizeof(cbuf));
+
+	MultiByteToWideChar(CP_UTF8, 0, msg, -1, wbuf, sizeof(wbuf));
+	WideCharToMultiByte(CP_ACP, 0, wbuf, -1, cbuf, sizeof(cbuf), NULL, NULL);
+
+	return cbuf;
+}
+#endif
 
 static void print_error(struct rt_env *rt)
 {

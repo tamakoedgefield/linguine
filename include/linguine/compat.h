@@ -208,10 +208,20 @@
  */
 
 #if !defined(NO_TRANSLATION)
+
+#if defined(TARGET_WINDOWS)
+#define _(text)		linguine_iconv(linguine_gettext(text))
+const char *linguine_gettext(const char *msg);
+const char *linguine_iconv(const char *msg);
+#else
 #define _(text)		linguine_gettext(text)
 const char *linguine_gettext(const char *msg);
+#endif
+
 #else
+
 #define _(text)		text
+
 #endif
 
 #endif
