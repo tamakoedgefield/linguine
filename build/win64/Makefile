@@ -34,7 +34,8 @@ LIB_OBJS=\
 	interpreter.o \
 	intrinsics.o \
 	jit-x86_64.o \
-	cback.o
+	cback.o \
+	translation.o
 
 DLL_OBJS=\
 	parser-pic.tab.o \
@@ -46,7 +47,8 @@ DLL_OBJS=\
 	interpreter-pic.o \
 	intrinsics-pic.o \
 	jit-x86_64-pic.o \
-	cback-pic.o
+	cback-pic.o \
+	translation-pic.o
 
 CMD_OBJS=\
 	command.o
@@ -128,6 +130,12 @@ cback.o: ../../src/cback.c
 	$(CC) -c -o $@ $(CPPFLAGS) $(CFLAGS) $<
 
 cback-pic.o: ../../src/cback.c
+	$(CC) -c -o $@ $(CPPFLAGS) $(CFLAGS) -fPIC $<
+
+translation.o: ../../src/translation.c
+	$(CC) -c -o $@ $(CPPFLAGS) $(CFLAGS) $<
+
+translation-pic.o: ../../src/translation.c
 	$(CC) -c -o $@ $(CPPFLAGS) $(CFLAGS) -fPIC $<
 
 ../../src/lexer.yy.c: ../../src/lexer.l

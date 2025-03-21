@@ -389,7 +389,7 @@ rt_register_bytecode(
 		free(file_name);
 
 	if (!succeeded) {
-		rt_error(rt, "Failed to load bytecode.");
+		rt_error(rt, _("Failed to load bytecode."));
 		return false;
 	}
 
@@ -608,7 +608,7 @@ rt_call_with_name(
 		bg = bg->next;
 	}
 	if (bg == NULL) {
-		rt_error(rt, "Cannot find funcion.");
+		rt_error(rt, _("Cannot find function."));
 		return false;
 	}
 	func = bg->val.val.func;
@@ -1090,7 +1090,7 @@ rt_get_array_size(struct rt_env *rt, struct rt_value *array, int *size)
 	assert(array->type == RT_VALUE_ARRAY);
 
 	if (array->type != RT_VALUE_ARRAY) {
-		rt_error(rt, "Not an array.");
+		rt_error(rt, _("Not an array."));
 		return false;
 	}
 
@@ -1111,12 +1111,8 @@ rt_get_array_elem(struct rt_env *rt, struct rt_value *array, int index, struct r
 	assert(index < array->val.arr->size);
 
 	/* Check the array boundary. */
-	if (index < 0) {
-		rt_error(rt, "Array index %d is negative value.", index);
-		return false;
-	}
-	if (index >= array->val.arr->size) {
-		rt_error(rt, "Array index %d is out-of-range.", index);
+	if (index < 0 || index >= array->val.arr->size) {
+		rt_error(rt, _("Array index %d is out-of-range."), index);
 		return false;
 	}
 
@@ -1298,7 +1294,7 @@ rt_get_dict_elem(struct rt_env *rt, struct rt_value *dict, const char *key, stru
 		}
 	}
 
-	rt_error(rt, "Dictionary key \"%s\" not found.", key);
+	rt_error(rt, _("Dictionary key \"%s\" not found."), key);
 
 	return false;
 }
@@ -1425,7 +1421,7 @@ rt_remove_dict_elem(
 		}
 	}
 
-	rt_error(rt, "Key \"%s\" not found.", key);
+	rt_error(rt, _("Dictionary key \"%s\" not found."), key);
 	return false;
 }
 
@@ -1437,7 +1433,7 @@ bool rt_get_local(struct rt_env *rt, const char *name, struct rt_value *val)
 	struct rt_bindlocal *local;
 
 	if (!rt_find_local(rt, name, &local)) {
-		rt_error(rt, "Local variable \"%s\" not found.", name);
+		rt_error(rt, _("Local variable \"%s\" not found."), name);
 		return false;
 	}
 
@@ -1534,7 +1530,7 @@ rt_get_global(
 		global = global->next;
 	}
 	if (global == NULL) {
-		rt_error(rt, "Global variable %d not found.", name);
+		rt_error(rt, _("Global variable \"%s\" not found."), name);
 		return false;
 	}
 
@@ -1976,7 +1972,7 @@ rt_add_helper(
 				return false;
 			break;
 		default:
-			rt_error(rt, "Value is not a number or a string.");
+			rt_error(rt, _("Value is not a number or a string."));
 			return false;
 		}
 		break;
@@ -1995,7 +1991,7 @@ rt_add_helper(
 				return false;
 			break;
 		default:
-			rt_error(rt, "Value is not a number or a string.");
+			rt_error(rt, _("Value is not a number or a string."));
 			return false;
 		}
 		break;
@@ -2014,12 +2010,12 @@ rt_add_helper(
 				return false;
 			break;
 		default:
-			rt_error(rt, "Value is not a number or a string.");
+			rt_error(rt, _("Value is not a number or a string."));
 			return false;
 		}
 		break;
 	default:
-		rt_error(rt, "Value is not a number or a string.");
+		rt_error(rt, _("Value is not a number or a string."));
 		return false;
 	}
 
@@ -2056,7 +2052,7 @@ rt_sub_helper(
 			dst_val->val.f = (float)src1_val->val.i - src2_val->val.f;
 			break;
 		default:
-			rt_error(rt, "Value is not a number.");
+			rt_error(rt, _("Value is not a number."));
 			return false;
 		}
 		break;
@@ -2071,12 +2067,12 @@ rt_sub_helper(
 			dst_val->val.f = src1_val->val.f - src2_val->val.f;
 			break;
 		default:
-			rt_error(rt, "Value is not a number.");
+			rt_error(rt, _("Value is not a number."));
 			return false;
 		}
 		break;
 	default:
-		rt_error(rt, "Value is not a number.");
+		rt_error(rt, _("Value is not a number."));
 		return false;
 	}
 
@@ -2113,7 +2109,7 @@ rt_mul_helper(
 			dst_val->val.f = (float)src1_val->val.i * src2_val->val.f;
 			break;
 		default:
-			rt_error(rt, "Value is not a number.");
+			rt_error(rt, _("Value is not a number."));
 			return false;
 		}
 		break;
@@ -2128,12 +2124,12 @@ rt_mul_helper(
 			dst_val->val.f = src1_val->val.f * src2_val->val.f;
 			break;
 		default:
-			rt_error(rt, "Value is not a number.");
+			rt_error(rt, _("Value is not a number."));
 			return false;
 		}
 		break;
 	default:
-		rt_error(rt, "Value is not a number.");
+		rt_error(rt, _("Value is not a number."));
 		return false;
 	}
 
@@ -2163,7 +2159,7 @@ rt_div_helper(
 		switch (src2_val->type) {
 		case RT_VALUE_INT:
 			if (src2_val->val.i == 0) {
-				rt_error(rt, "Division by zero.");
+				rt_error(rt, _("Division by zero."));
 				return false;
 			}
 			dst_val->type = RT_VALUE_INT;
@@ -2171,14 +2167,14 @@ rt_div_helper(
 			break;
 		case RT_VALUE_FLOAT:
 			if (src2_val->val.f == 0) {
-				rt_error(rt, "Division by zero.");
+				rt_error(rt, _("Division by zero."));
 				return false;
 			}
 			dst_val->type = RT_VALUE_FLOAT;
 			dst_val->val.f = (float)src1_val->val.i / src2_val->val.f;
 			break;
 		default:
-			rt_error(rt, "Value is not a number.");
+			rt_error(rt, _("Value is not a number."));
 			return false;
 		}
 		break;
@@ -2186,7 +2182,7 @@ rt_div_helper(
 		switch (src2_val->type) {
 		case RT_VALUE_INT:
 			if (src2_val->val.i == 0) {
-				rt_error(rt, "Division by zero.");
+				rt_error(rt, _("Division by zero."));
 				return false;
 			}
 			dst_val->type = RT_VALUE_FLOAT;
@@ -2194,19 +2190,19 @@ rt_div_helper(
 			break;
 		case RT_VALUE_FLOAT:
 			if (src2_val->val.f == 0) {
-				rt_error(rt, "Division by zero.");
+				rt_error(rt, _("Division by zero."));
 				return false;
 			}
 			dst_val->type = RT_VALUE_FLOAT;
 			dst_val->val.f = src1_val->val.f / src2_val->val.f;
 			break;
 		default:
-			rt_error(rt, "Value is not a number.");
+			rt_error(rt, _("Value is not a number."));
 			return false;
 		}
 		break;
 	default:
-		rt_error(rt, "Value is not a number.");
+		rt_error(rt, _("Value is not a number."));
 		return false;
 	}
 
@@ -2239,12 +2235,12 @@ rt_mod_helper(
 			dst_val->val.i = src1_val->val.i % src2_val->val.i;
 			break;
 		default:
-			rt_error(rt, "Value is not an integer.");
+			rt_error(rt, _("Value is not an integer."));
 			return false;
 		}
 		break;
 	default:
-		rt_error(rt, "Value is not an integer.");
+		rt_error(rt, _("Value is not an integer."));
 		return false;
 	}
 
@@ -2277,12 +2273,12 @@ rt_and_helper(
 			dst_val->val.i = src1_val->val.i & src2_val->val.i;
 			break;
 		default:
-			rt_error(rt, "Value is not an integer.");
+			rt_error(rt, _("Value is not an integer."));
 			return false;
 		}
 		break;
 	default:
-		rt_error(rt, "Value is not an integer.");
+		rt_error(rt, _("Value is not an integer."));
 		return false;
 	}
 
@@ -2315,12 +2311,12 @@ rt_or_helper(
 			dst_val->val.i = src1_val->val.i | src2_val->val.i;
 			break;
 		default:
-			rt_error(rt, "Value is not an integer.");
+			rt_error(rt, _("Value is not an integer."));
 			return false;
 		}
 		break;
 	default:
-		rt_error(rt, "Value is not an integer.");
+		rt_error(rt, _("Value is not an integer."));
 		return false;
 	}
 
@@ -2353,12 +2349,12 @@ rt_xor_helper(
 			dst_val->val.i = src1_val->val.i ^ src2_val->val.i;
 			break;
 		default:
-			rt_error(rt, "Value is not an integer.");
+			rt_error(rt, _("Value is not an integer."));
 			return false;
 		}
 		break;
 	default:
-		rt_error(rt, "Value is not an integer.");
+		rt_error(rt, _("Value is not an integer."));
 		return false;
 	}
 
@@ -2386,7 +2382,7 @@ rt_neg_helper(
 		dst_val->val.i = ~src_val->val.i;
 		break;
 	default:
-		rt_error(rt, "Value is not an integer.");
+		rt_error(rt, _("Value is not an integer."));
 		return false;
 	}
 
@@ -2423,7 +2419,7 @@ rt_lt_helper(
 			dst_val->val.i = ((float)src1_val->val.i < src2_val->val.f) ? 1 : 0;
 			break;
 		default:
-			rt_error(rt, "Value is not a number.");
+			rt_error(rt, _("Value is not a number."));
 			return false;
 		}
 		break;
@@ -2438,7 +2434,7 @@ rt_lt_helper(
 			dst_val->val.i = (src1_val->val.f < src2_val->val.f) ? 1 : 0;
 			break;
 		default:
-			rt_error(rt, "Value is not a number.");
+			rt_error(rt, _("Value is not a number."));
 			return false;
 		}
 		break;
@@ -2449,12 +2445,12 @@ rt_lt_helper(
 			dst_val->val.i = strcmp(src1_val->val.str->s, src2_val->val.str->s) < 0 ? 1 : 0;
 			break;
 		default:
-			rt_error(rt, "Value is not a string.");
+			rt_error(rt, _("Value is not a string."));
 			break;
 		}
 		break;
 	default:
-		rt_error(rt, "Value is not a number or a string.");
+		rt_error(rt, _("Value is not a number or a string."));
 		return false;
 	}
 
@@ -2491,7 +2487,7 @@ rt_lte_helper(
 			dst_val->val.i = ((float)src1_val->val.i <= src2_val->val.f) ? 1 : 0;
 			break;
 		default:
-			rt_error(rt, "Value is not a number.");
+			rt_error(rt, _("Value is not a number."));
 			return false;
 		}
 		break;
@@ -2506,7 +2502,7 @@ rt_lte_helper(
 			dst_val->val.i = (src1_val->val.f <= src2_val->val.f) ? 1 : 0;
 			break;
 		default:
-			rt_error(rt, "Value is not a number.");
+			rt_error(rt, _("Value is not a number."));
 			return false;
 		}
 		break;
@@ -2517,12 +2513,12 @@ rt_lte_helper(
 			dst_val->val.i = strcmp(src1_val->val.str->s, src2_val->val.str->s) <= 0 ? 1 : 0;
 			break;
 		default:
-			rt_error(rt, "Value is not a string.");
+			rt_error(rt, _("Value is not a string."));
 			break;
 		}
 		break;
 	default:
-		rt_error(rt, "Value is not a number or a string.");
+		rt_error(rt, _("Value is not a number or a string."));
 		return false;
 	}
 
@@ -2559,7 +2555,7 @@ rt_gt_helper(
 			dst_val->val.i = ((float)src1_val->val.i > src2_val->val.f) ? 1 : 0;
 			break;
 		default:
-			rt_error(rt, "Value is not a number.");
+			rt_error(rt, _("Value is not a number."));
 			return false;
 		}
 		break;
@@ -2574,7 +2570,7 @@ rt_gt_helper(
 			dst_val->val.i = (src1_val->val.f > src2_val->val.f) ? 1 : 0;
 			break;
 		default:
-			rt_error(rt, "Value is not a number.");
+			rt_error(rt, _("Value is not a number."));
 			return false;
 		}
 		break;
@@ -2585,12 +2581,12 @@ rt_gt_helper(
 			dst_val->val.i = strcmp(src1_val->val.str->s, src2_val->val.str->s) > 0 ? 1 : 0;
 			break;
 		default:
-			rt_error(rt, "Value is not a string.");
+			rt_error(rt, _("Value is not a string."));
 			break;
 		}
 		break;
 	default:
-		rt_error(rt, "Value is not a number or a string.");
+		rt_error(rt, _("Value is not a number or a string."));
 		return false;
 	}
 
@@ -2627,7 +2623,7 @@ rt_gte_helper(
 			dst_val->val.i = ((float)src1_val->val.i >= src2_val->val.f) ? 1 : 0;
 			break;
 		default:
-			rt_error(rt, "Value is not a number.");
+			rt_error(rt, _("Value is not a number."));
 			return false;
 		}
 		break;
@@ -2642,7 +2638,7 @@ rt_gte_helper(
 			dst_val->val.i = (src1_val->val.f >= src2_val->val.f) ? 1 : 0;
 			break;
 		default:
-			rt_error(rt, "Value is not a number.");
+			rt_error(rt, _("Value is not a number."));
 			return false;
 		}
 		break;
@@ -2653,12 +2649,12 @@ rt_gte_helper(
 			dst_val->val.i = strcmp(src1_val->val.str->s, src2_val->val.str->s) >= 0 ? 1 : 0;
 			break;
 		default:
-			rt_error(rt, "Value is not a string.");
+			rt_error(rt, _("Value is not a string."));
 			break;
 		}
 		break;
 	default:
-		rt_error(rt, "Value is not a number or a string.");
+		rt_error(rt, _("Value is not a number or a string."));
 		return false;
 	}
 
@@ -2695,7 +2691,7 @@ rt_eq_helper(
 			dst_val->val.i = ((float)src1_val->val.i == src2_val->val.f) ? 1 : 0;
 			break;
 		default:
-			rt_error(rt, "Value is not a number.");
+			rt_error(rt, _("Value is not a number."));
 			return false;
 		}
 		break;
@@ -2710,7 +2706,7 @@ rt_eq_helper(
 			dst_val->val.i = (src1_val->val.f == src2_val->val.f) ? 1 : 0;
 			break;
 		default:
-			rt_error(rt, "Value is not a number.");
+			rt_error(rt, _("Value is not a number."));
 			return false;
 		}
 		break;
@@ -2721,12 +2717,12 @@ rt_eq_helper(
 			dst_val->val.i = strcmp(src1_val->val.str->s, src2_val->val.str->s) == 0 ? 1 : 0;
 			break;
 		default:
-			rt_error(rt, "Value is not a string.");
+			rt_error(rt, _("Value is not a string."));
 			break;
 		}
 		break;
 	default:
-		rt_error(rt, "Value is not a number or a string.");
+		rt_error(rt, _("Value is not a number or a string."));
 		return false;
 	}
 
@@ -2761,7 +2757,7 @@ rt_neq_helper(
 			dst_val->val.i = ((float)src1_val->val.i != src2_val->val.f) ? 1 : 0;
 			break;
 		default:
-			rt_error(rt, "Value is not a number.");
+			rt_error(rt, _("Value is not a number."));
 			return false;
 		}
 		break;
@@ -2776,7 +2772,7 @@ rt_neq_helper(
 			dst_val->val.i = (src1_val->val.f != src2_val->val.f) ? 1 : 0;
 			break;
 		default:
-			rt_error(rt, "Value is not a number.");
+			rt_error(rt, _("Value is not a number."));
 			return false;
 		}
 		break;
@@ -2787,12 +2783,12 @@ rt_neq_helper(
 			dst_val->val.i = strcmp(src1_val->val.str->s, src2_val->val.str->s) != 0 ? 1 : 0;
 			break;
 		default:
-			rt_error(rt, "Value is not a string.");
+			rt_error(rt, _("Value is not a string."));
 			break;
 		}
 		break;
 	default:
-		rt_error(rt, "Value is not a number or a string.");
+		rt_error(rt, _("Value is not a number or a string."));
 		return false;
 	}
 
@@ -2822,21 +2818,21 @@ rt_storearray_helper(
 	} else if (arr_val->type == RT_VALUE_DICT) {
 		is_dict = true;
 	} else {
-		rt_error(rt, "Not an array or a dictionary.");
+		rt_error(rt, _("Not an array or a dictionary."));
 		return false;
 	}
 
 	subscr_val = &rt->frame->tmpvar[subscr];
 	if (!is_dict) {
 		if (subscr_val->type != RT_VALUE_INT) {
-			rt_error(rt, "Subscript not an integer.");
+			rt_error(rt, _("Subscript not an integer."));
 			return false;
 		}
 		subscript = subscr_val->val.i;
 		key = NULL;
 	} else {
 		if (subscr_val->type != RT_VALUE_STRING) {
-			rt_error(rt, "Subscript not a string.");
+			rt_error(rt, _("Subscript not a string."));
 			return false;
 		}
 		subscript = -1;
@@ -2884,21 +2880,21 @@ rt_loadarray_helper(
 	} else if (arr_val->type == RT_VALUE_DICT) {
 		is_dict = true;
 	} else {
-		rt_error(rt, "Not an array or a dictionary.");
+		rt_error(rt, _("Not an array or a dictionary."));
 		return false;
 	}
 
 	/* Check the subscript type. */
 	if (!is_dict) {
 		if (subscr_val->type != RT_VALUE_INT) {
-			rt_error(rt, "Subscript not an integer.");
+			rt_error(rt, _("Subscript not an integer."));
 			return false;
 		}
 		subscript = subscr_val->val.i;
 		key = NULL;
 	} else {
 		if (subscr_val->type != RT_VALUE_STRING) {
-			rt_error(rt, "Subscript not a string.");
+			rt_error(rt, _("Subscript not a string."));
 			return false;
 		}
 		subscript = -1;;
@@ -2946,7 +2942,7 @@ rt_len_helper(
 		dst_val->val.i = src_val->val.dict->size;
 		break;
 	default:
-		rt_error(rt, "Value is not a string, an array, or a dictionary.");
+		rt_error(rt, _("Value is not a string, an array, or a dictionary."));
 		return false;
 	}
 
@@ -2970,15 +2966,15 @@ rt_getdictkeybyindex_helper(
 	subscr_val = &rt->frame->tmpvar[subscr];
 
 	if (dict_val->type != RT_VALUE_DICT) {
-		rt_error(rt, "Not a dictionary.");
+		rt_error(rt, _("Not a dictionary."));
 		return false;
 	}
 	if (subscr_val->type != RT_VALUE_INT) {
-		rt_error(rt, "Subscript not an integer.");
+		rt_error(rt, _("Subscript not an integer."));
 		return false;
 	}
 	if (subscr_val->val.i >= dict_val->val.dict->size) {
-		rt_error(rt, "Dictionary index out-of-range.");
+		rt_error(rt, _("Dictionary index out-of-range."));
 		return false;
 	}
 
@@ -3008,15 +3004,15 @@ rt_getdictvalbyindex_helper(
 	subscr_val = &rt->frame->tmpvar[subscr];
 
 	if (dict_val->type != RT_VALUE_DICT) {
-		rt_error(rt, "Not a dictionary.");
+		rt_error(rt, _("Not a dictionary."));
 		return false;
 	}
 	if (subscr_val->type != RT_VALUE_INT) {
-		rt_error(rt, "Subscript not an integer.");
+		rt_error(rt, _("Subscript not an integer."));
 		return false;
 	}
 	if (subscr_val->val.i >= dict_val->val.dict->size) {
-		rt_error(rt, "Dictionary index out-of-range.");
+		rt_error(rt, _("Dictionary index out-of-range."));
 		return false;
 	}
 
@@ -3046,7 +3042,7 @@ rt_loadsymbol_helper(
 		if (rt_find_global(rt, symbol, &global)) {
 			rt->frame->tmpvar[dst] = global->val;
 		} else {
-			rt_error(rt, "Symbol \"%s\" not found.", symbol);
+			rt_error(rt, _("Symbol \"%s\" not found."), symbol);
 			return false;
 		}
 	}
@@ -3100,7 +3096,7 @@ rt_loaddot_helper(
 	const char *field)
 {
 	if (rt->frame->tmpvar[dict].type != RT_VALUE_DICT) {
-		rt_error(rt, "Not a dictionary.");
+		rt_error(rt, _("Not a dictionary."));
 		return false;
 	}
 
@@ -3121,7 +3117,7 @@ rt_storedot_helper(
 	int src)
 {
 	if (rt->frame->tmpvar[dict].type != RT_VALUE_DICT) {
-		rt_error(rt, "Not a dictionary.");
+		rt_error(rt, _("Not a dictionary."));
 		return false;
 	}
 
@@ -3148,7 +3144,7 @@ rt_call_helper(
 
 	/* Get a function. */
 	if (rt->frame->tmpvar[func].type != RT_VALUE_FUNC) {
-		rt_error(rt, "Not a function.");
+		rt_error(rt, _("Not a function."));
 		return false;
 	}
 	callee = rt->frame->tmpvar[func].val.func;
@@ -3195,7 +3191,7 @@ rt_thiscall_helper(
 
 	/* Get a receiver object. */
 	if (rt->frame->tmpvar[obj].type != RT_VALUE_DICT) {
-		rt_error(rt, "Not a dictionary.");
+		rt_error(rt, _("Not a dictionary."));
 		return false;
 	}
 	obj_val = &rt->frame->tmpvar[obj];
@@ -3204,7 +3200,7 @@ rt_thiscall_helper(
 	if (!rt_get_dict_elem(rt, &rt->frame->tmpvar[obj], name, &callee_value))
 		return false;
 	if (callee_value.type != RT_VALUE_FUNC) {
-		rt_error(rt, "Not a function.");
+		rt_error(rt, _("Not a function."));
 		return false;
 	}
 	callee = callee_value.val.func;
@@ -3301,5 +3297,5 @@ void
 rt_out_of_memory(
 	struct rt_env *rt)
 {
-	rt_error(rt, "Out of memory.");
+	rt_error(rt, _("Out of memory."));
 }

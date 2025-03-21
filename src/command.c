@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <locale.h>
 #include <unistd.h>
 #include <stdbool.h>
 
@@ -62,6 +63,7 @@ static bool run_interpreter(int argc, char *argv[], int *ret);
 static bool run_source_compiler(int argc, char *argv[]);
 static bool run_binary_compiler(int argc, char *argv[]);
 static bool load_file(char *fname);
+static void init_lang_code(void);
 static void print_error(struct rt_env *rt);
 static bool cfunc_print(struct rt_env *rt);
 static bool cfunc_readline(struct rt_env *rt);
@@ -69,6 +71,8 @@ static bool cfunc_readline(struct rt_env *rt);
 int main(int argc, char *argv[])
 {
 	int ret;
+
+	init_lang_code();
 
 	/* Parse command line options. */
 	parse_options(argc, argv);
@@ -244,7 +248,7 @@ static bool run_binary_compiler(int argc, char *argv[])
 
 		/* Do parse and build AST. */
 		if (!ast_build(argv[i], source_data)) {
-			printf("Error: %s: %d: %s",
+			printf(_("Error: %s: %d: %s\n"),
 			       ast_get_file_name(),
 			       ast_get_error_line(),
 			       ast_get_error_message());
@@ -253,7 +257,7 @@ static bool run_binary_compiler(int argc, char *argv[])
 
 		/* Transform AST to HIR. */
 		if (!hir_build()) {
-			printf("Error: %s: %d: %s",
+			printf(_("Error: %s: %d: %s\n"),
 			       hir_get_file_name(),
 			       hir_get_error_line(),
 			       hir_get_error_message());
@@ -269,7 +273,7 @@ static bool run_binary_compiler(int argc, char *argv[])
 			strcat(lsc_fname, ".lsc");
 		fp = fopen(lsc_fname, "wb");
 		if (fp == NULL) {
-			printf("Cannot open %s.\n", lsc_fname);
+			printf(_("Cannot open file \"%s\".\n"), lsc_fname);
 			exit(1);
 		}
 
@@ -289,7 +293,7 @@ static bool run_binary_compiler(int argc, char *argv[])
 			/* Transform HIR to LIR (bytecode). */
 			hfunc = hir_get_function(j);
 			if (!lir_build(hfunc, &lfunc)) {
-				printf("Error: %s: %d: %s",
+				printf(_("Error: %s: %d: %s\n"),
 				       lir_get_file_name(),
 				       lir_get_error_line(),
 				       lir_get_error_message());
@@ -341,7 +345,7 @@ static bool run_source_compiler(int argc, char *argv[])
 
 		/* Do parse and build AST. */
 		if (!ast_build(argv[i], source_data)) {
-			printf("Error: %s: %d: %s",
+			printf(_("Error: %s: %d: %s\n"),
 			       ast_get_file_name(),
 			       ast_get_error_line(),
 			       ast_get_error_message());
@@ -350,7 +354,7 @@ static bool run_source_compiler(int argc, char *argv[])
 
 		/* Transform AST to HIR. */
 		if (!hir_build()) {
-			printf("Error: %s: %d: %s",
+			printf(_("Error: %s: %d: %s\n"),
 			       hir_get_file_name(),
 			       hir_get_error_line(),
 			       hir_get_error_message());
@@ -366,7 +370,7 @@ static bool run_source_compiler(int argc, char *argv[])
 			/* Transform HIR to LIR (bytecode). */
 			hfunc = hir_get_function(j);
 			if (!lir_build(hfunc, &lfunc)) {
-				printf("Error: %s: %d: %s",
+				printf(_("Error: %s: %d: %s\n"),
 				       lir_get_file_name(),
 				       lir_get_error_line(),
 				       lir_get_error_message());
@@ -403,13 +407,13 @@ static bool load_file(char *fname)
 
 	fp = fopen(fname, "rb");
 	if (fp == NULL) {
-		printf("Cannot open file \"%s\".\n", fname);
+		printf(_("Cannot open file \"%s\".\n"), fname);
 		return false;
 	}
 
 	len = fread(source_data, 1, sizeof(source_data) - 1, fp);
 	if (len == 0) {
-		printf("Cannot read file \"%s\".\n", fname);
+		printf(_("Cannot read file \"%s\".\n"), fname);
 		return false;
 	}
 	source_size = (int)len;
@@ -422,9 +426,43 @@ static bool load_file(char *fname)
 	return true;
 }
 
+static void init_lang_code(void)
+{
+	extern char *lang_code;
+	const char *locale;
+
+	locale = setlocale(LC_ALL, "");
+	if (locale == NULL)
+		lang_code = "en";
+	else if (locale[0] == '\0' || locale[1] == '\0')
+		lang_code = "en";
+	else if (strncasecmp(locale, "en", 2) == 0)
+		lang_code = "en";
+	else if (strncasecmp(locale, "fr", 2) == 0)
+		lang_code = "fr";
+	else if (strncasecmp(locale, "de", 2) == 0)
+		lang_code = "de";
+	else if (strncasecmp(locale, "it", 2) == 0)
+		lang_code = "it";
+	else if (strncasecmp(locale, "es", 2) == 0)
+		lang_code = "es";
+	else if (strncasecmp(locale, "el", 2) == 0)
+		lang_code = "el";
+	else if (strncasecmp(locale, "ru", 2) == 0)
+		lang_code = "ru";
+	else if (strncasecmp(locale, "zh_CN", 5) == 0)
+		lang_code = "zh";
+	else if (strncasecmp(locale, "zh_TW", 5) == 0)
+		lang_code = "tw";
+	else if (strncasecmp(locale, "ja", 2) == 0)
+		lang_code = "ja";
+	else
+		lang_code = "en";
+}
+
 static void print_error(struct rt_env *rt)
 {
-	printf("%s:%d: error: %s\n",
+	printf(_("%s:%d: error: %s\n"),
 	       rt_get_error_file(rt),
 	       rt_get_error_line(rt),
 	       rt_get_error_message(rt));

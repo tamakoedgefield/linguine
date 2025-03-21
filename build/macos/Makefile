@@ -46,7 +46,7 @@ liblinguine.a: liblinguine-arm64.a liblinguine-x86_64.a
 # The following are for arm64 architecture-specific.
 #
 
-liblinguine-arm64.a: parser-arm64.tab.o lexer-arm64.yy.o ast-arm64.o hir-arm64.o lir-arm64.o runtime-arm64.o interpreter-arm64.o intrinsics-arm64.o jit-arm64.o cback-arm64.o
+liblinguine-arm64.a: parser-arm64.tab.o lexer-arm64.yy.o ast-arm64.o hir-arm64.o lir-arm64.o runtime-arm64.o interpreter-arm64.o intrinsics-arm64.o jit-arm64.o cback-arm64.o translation-arm64.o
 	$(AR) rcs $@ $^
 
 parser-arm64.tab.o: ../../src/parser.tab.c
@@ -79,11 +79,14 @@ jit-arm64.o: ../../src/jit-arm64.c
 cback-arm64.o: ../../src/cback.c
 	$(CC) -c -arch arm64 -o $@ $(CPPFLAGS) $(CFLAGS) $<
 
+translation-arm64.o: ../../src/translation.c
+	$(CC) -c -arch arm64 -o $@ $(CPPFLAGS) $(CFLAGS) $<
+
 #
 # The following are for x86_64.
 #
 
-liblinguine-x86_64.a: parser-x86_64.tab.o lexer-x86_64.yy.o ast-x86_64.o hir-x86_64.o lir-x86_64.o runtime-x86_64.o interpreter-x86_64.o intrinsics-x86_64.o jit-x86_64.o cback-x86_64.o
+liblinguine-x86_64.a: parser-x86_64.tab.o lexer-x86_64.yy.o ast-x86_64.o hir-x86_64.o lir-x86_64.o runtime-x86_64.o interpreter-x86_64.o intrinsics-x86_64.o jit-x86_64.o cback-x86_64.o translation-x86_64.o
 	$(AR) rcs $@ $^
 
 parser-x86_64.tab.o: ../../src/parser.tab.c
@@ -114,6 +117,9 @@ jit-x86_64.o: ../../src/jit-x86_64.c
 	$(CC) -c -arch x86_64 -o $@ $(CPPFLAGS) $(CFLAGS) $<
 
 cback-x86_64.o: ../../src/cback.c
+	$(CC) -c -arch x86_64 -o $@ $(CPPFLAGS) $(CFLAGS) $<
+
+translation-x86_64.o: ../../src/translation.c
 	$(CC) -c -arch x86_64 -o $@ $(CPPFLAGS) $(CFLAGS) $<
 
 #

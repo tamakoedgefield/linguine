@@ -205,7 +205,7 @@ hir_visit_func(
 
 	/* Check maximum functions. */
 	if (hir_func_count >= HIR_FUNC_MAX) {
-		hir_fatal(0, "Too many functions.");
+		hir_fatal(0, _("Too many functions."));
 		return false;
 	}
 
@@ -362,7 +362,7 @@ hir_visit_stmt_list(
 				p_search = p_search->parent;
 			}
 			if (p_search == NULL) {
-				hir_fatal(cur_astmt->line, "continue appeared outside loop.");
+				hir_fatal(cur_astmt->line, _("continue appeared outside loop."));
 				return false;
 			}
 
@@ -387,7 +387,7 @@ hir_visit_stmt_list(
 				p_search = p_search->parent;
 			}
 			if (p_search == NULL) {
-				hir_fatal(cur_astmt->line, "continue appeared outside loop.");
+				hir_fatal(cur_astmt->line, _("continue appeared outside loop."));
 				return false;
 			}
 
@@ -608,7 +608,7 @@ hir_visit_assign_stmt(
 	else if (hstmt->lhs->type == HIR_EXPR_DOT)
 		is_lhs_ok = true;
 	if (!is_lhs_ok) {
-		hir_fatal(cur_astmt->line, "LHS is not a term or an array element.");
+		hir_fatal(cur_astmt->line, _("LHS is not a term or an array element."));
 		hir_free_stmt(hstmt);
 		return false;
 	}
@@ -741,11 +741,11 @@ hir_visit_elif_stmt(
 
 	/* Check the previous block. */
 	if (*prev_block == NULL || (*prev_block)->type != HIR_BLOCK_IF) {
-		hir_fatal(cur_astmt->line, "else-if block appeared without if block");
+		hir_fatal(cur_astmt->line, _("else-if block appeared without if block."));
 		return false;
 	}
 	if ((*prev_block)->val.if_.cond == NULL) {
-		hir_fatal(cur_astmt->line, "else-if appeared after else.");
+		hir_fatal(cur_astmt->line, _("else-if appeared after else."));
 		return false;
 	}
 	assert((*prev_block)->val.if_.chain == NULL);
@@ -827,11 +827,11 @@ hir_visit_else_stmt(
 
 	/* Check the previous block. */
 	if (*prev_block == NULL || (*prev_block)->type != HIR_BLOCK_IF) {
-		hir_fatal(cur_astmt->line, "else-if block appeared without if block");
+		hir_fatal(cur_astmt->line, _("else-if block appeared without if block."));
 		return false;
 	}
 	if ((*prev_block)->val.if_.cond == NULL) {
-		hir_fatal(cur_astmt->line, "else appeared after else.");
+		hir_fatal(cur_astmt->line, _("else appeared after else."));
 		return false;
 	}
 	assert((*prev_block)->val.if_.chain == NULL);
@@ -1438,7 +1438,7 @@ hir_visit_call_expr(
 			arg = arg->next;
 			e->val.call.arg_count++;
 			if (e->val.call.arg_count > HIR_PARAM_SIZE) {
-				hir_fatal(hir_error_line, "Exceeded the maximum argument count.");
+				hir_fatal(hir_error_line, _("Exceeded the maximum argument count."));
 				return false;
 			}
 		}
@@ -1538,7 +1538,7 @@ hir_visit_array_expr(
 
 			e->val.array.elem_count++;
 			if (e->val.array.elem_count > HIR_ARRAY_LITERAL_SIZE) {
-				hir_fatal(hir_error_line, "Exceeded the maximum argument count.");
+				hir_fatal(hir_error_line, _("Exceeded the maximum argument count."));
 				return false;
 			}
 
@@ -1597,7 +1597,7 @@ hir_visit_dict_expr(
 			/* Increment the key-value pair count. */
 			e->val.dict.kv_count++;
 			if (e->val.dict.kv_count > HIR_DICT_LITERAL_SIZE) {
-				hir_fatal(hir_error_line, "Exceeded the maximum argument count.");
+				hir_fatal(hir_error_line, _("Exceeded the maximum argument count."));
 				return false;
 			}
 
@@ -1768,7 +1768,7 @@ hir_defer_anon_func(
 
 	hir_anon_func_count++;
 	if (hir_anon_func_count >= ANON_FUNC_SIZE) {
-		hir_fatal(hir_error_line, "Too many anonymous functions.");
+		hir_fatal(hir_error_line, _("Too many anonymous functions."));
 		return false;
 	}
 

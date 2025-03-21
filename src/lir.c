@@ -868,7 +868,7 @@ lir_visit_stmt(
 
 			lir_decrement_tmpvar(obj_tmpvar);
 		} else {
-			lir_fatal("LHS is not a symbol or an array element.");
+			lir_fatal(_("LHS is not a symbol or an array element."));
 			return false;
 		}
 	}
@@ -1485,7 +1485,7 @@ lir_increment_tmpvar(
 	int *tmpvar_index)
 {
 	if (tmpvar_top >= TMPVAR_MAX) {
-		lir_fatal("Too much local variables.");
+		lir_fatal(_("Too much local variables."));
 		return false;
 	}
 
@@ -1555,7 +1555,7 @@ static bool lir_put_branch_addr(
 	struct hir_block *block)
 {
 	if (loc_count >= LOC_MAX) {
-		lir_fatal("Too many jumps.");
+		lir_fatal(_("Too many jumps."));
 		return false;
 	}
 
@@ -1717,7 +1717,8 @@ lir_out_of_memory(void)
 {
 	snprintf(lir_error_message,
 		 sizeof(lir_error_message),
-		 "LIR: Out of memory error.");
+		 "%s",
+		 _("LIR: Out of memory error."));
 }
 
 /*

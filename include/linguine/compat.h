@@ -207,6 +207,11 @@
  * Message Translation
  */
 
+#if !defined(NO_TRANSLATION)
+#define _(text)		linguine_gettext(text)
+const char *linguine_gettext(const char *msg);
+#else
 #define _(text)		text
+#endif
 
 #endif
