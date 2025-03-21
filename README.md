@@ -79,7 +79,7 @@ func main() {
 }
 ```
 
-## For-loop
+### For-loop
 
 Linguine's for-loop construct provides a concise syntax for iterating
 through sequences such as ranges, arrays, and dictionaries. The range
@@ -166,9 +166,9 @@ func main() {
 
 ### Source Execution
 
-Use the `linguine` command.
-JIT is enabled by default. If you want to turn off JIT,
-add the `-i` option to turn it off.
+Use the `linguine` command to run a script source code.
+Note that JIT-compilation is enabled by default.
+If you want to turn off JIT, add the `--safe-mode` option.
 
 ```
  +--------+       +=======+
@@ -178,8 +178,8 @@ add the `-i` option to turn it off.
 
 ### Bytecode Execution
 
-Not implemented yet.  Although the bytecode format is internally used,
-we don't have its file format so far.
+Use the `linguine --bytecode` command to convert a `.ls` source code to a `.lsc` bytecode file.
+Then use the `linguine` command to run the generated `.lsc` file.
 
 ```
  +-------------------+        +----------------------+       +=======+
@@ -189,23 +189,14 @@ we don't have its file format so far.
 
 ### Standalone Execution
 
-Not implemented yet.
-We are going to make a C backend in the near future.
+Use the `linguine --app` command to convert `.ls` files to a single `.c` file.
+Then, use the `cc` command to compile the generated `.c` file with `liblinguine.a`.
+Finally, run the generated app.
 
 ```
  +-------------------+        +--------------------+       +-------------------+      +=======+
  | Source File (.ls) |  --->  | C Source File (.c) |  -->  | Executable (.exe) |  ==> || Run ||
  +-------------------+        +--------------------+       +-------------------+      +=======+
-```
-
-### Plugin Library
-
-Same as standalone execution.
-
-```
- +-------------------+        +--------------------+       +---------------+
- | Source File (.ls) |  --->  | C Source File (.c) |  -->  | Plugin (.dll) |
- +-------------------+        +--------------------+       +---------------+
 ```
 
 ## Compilation Stages
