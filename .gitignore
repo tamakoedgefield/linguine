@@ -6,8 +6,10 @@ build/linux/linguine
 build/linux/liblinguine.a
 build/linux/liblinguine.so
 
-build/macos/liblinguine
+build/macos/linguine
 build/macos/liblinguine.a
+build/macos/liblinguine-arm64.a
+build/macos/liblinguine-x86_64.a
 build/macos/liblinguine.dylib
 
 build/win32/linguine.exe

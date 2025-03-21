@@ -34,9 +34,10 @@ cp build/macos/linguine "$TARGET_DIR/macos/"
 cp README.md "$TARGET_DIR/"
 cp hello.ls "$TARGET_DIR/"
 cp LICENSE "$TARGET_DIR/"
+cp RELNOTE.txt "$TARGET_DIR/"
 
-zip -9 -r "$TARGET_ZIP" "$TARGET_DIR"
-tar czf "$TARGET_TGZ" "$TARGET_DIR"
+zip -9 -r "$TARGET_ZIP" "linguine-$VERSION"
+tar czf "$TARGET_TGZ" "linguine-$VERSION"
 
 echo 'Making a release on GitHub...'
 
