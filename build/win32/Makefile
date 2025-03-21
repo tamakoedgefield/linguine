@@ -14,6 +14,8 @@ CFLAGS=\
 	-g3 \
 	-ffast-math \
 	-ftree-vectorize \
+	-finput-charset=utf-8 \
+	-fexec-charset=cp932 \
 	-std=gnu11 \
 	-Wall \
 	-Werror \
