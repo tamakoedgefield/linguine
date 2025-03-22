@@ -168,4 +168,4 @@ translation-pic.o: ../../src/translation.c
 	$(YACC) -Wcounterexamples -d -p ast_yy -o ../../src/parser.tab.c ../../src/parser.y
 
 clean:
-	rm -rf *.o liblinguine.a liblinguine.sp linguine
+	rm -rf *.o liblinguine.a liblinguine.so linguine

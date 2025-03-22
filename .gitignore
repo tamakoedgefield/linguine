@@ -2,6 +2,10 @@
 *.o
 *.exe
 
+obj
+linguine
+linguine.a
+
 build/linux/linguine
 build/linux/liblinguine.a
 build/linux/liblinguine.so
