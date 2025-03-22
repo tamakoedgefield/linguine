@@ -27,7 +27,7 @@ case "`uname -s`" in
         ;;
     Darwin)
         echo "Detected macOS."
-        HOST=macos
+        HOST=posix
         ;;
     Linux)
         echo "Detected Linux."
@@ -74,7 +74,6 @@ if [ "$HOST" = "windows" ]; then
         -e "s|^STRIP=.*$|STRIP=strip|g" \
         -i Makefile
     echo 'Configured. Run make.'
-    echo ''
     exit 0
 fi
 
@@ -87,9 +86,9 @@ if [ "$HOST" = "posix" ]; then
         -e "s|^CXX=.*$|CXX=c++|g" \
         -e "s|^AR=.*$|AR=ar|g" \
         -e "s|^STRIP=.*$|STRIP=strip|g" \
-        -i Makefile
+        Makefile > Makefile.new
+    mv Makefile.new Makefile
     echo 'Configured. Run make.'
-    echo ''
     exit 0
 fi
 
